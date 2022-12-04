@@ -9,9 +9,9 @@ ui <- navbarPage(
             titlePanel("2020-2022 UIUC Covid Tracker"),
             sidebarLayout(
               sidebarPanel(
-                selectInput(inputId = "groups", label = "Group", Groups),
+                selectInput(inputId = "groups", label = "Group", choices =  Groups),
                 checkboxInput(inputId = "positivity", label = "Positivity Rate"),
-                dateRangeInput(inputId = "time", label = "Date Range",
+                dateRangeInput(inputId = "date", label = "Date Range",
                                start  = "2020-08-17",
                                end    = "2022-10-13",
                                min    = "2020-08-17",
@@ -25,28 +25,28 @@ ui <- navbarPage(
 
  server <- function(input, output) {
    daterange <- reactive({
-     Updated_Covid_Dataset %>% filter(Updated_Covid_Dataset$time >= input$time[1] 
-                                   & Updated_Covid_Dataset$time <= input$time[2])
+     Updated_Covid_Dataset %>% filter(Updated_Covid_Dataset$Date >= input$date[1] &
+                                        Updated_Covid_Dataset$Date <= input$date[2])
    })
    
    output$selectPlot <- renderPlot({
      
      if (input$groups == 'Undergraduates') { 
-       cases_plot = ggplot(data = daterange(), aes(x = time, y = undergradCases)) + 
+       cases_plot = ggplot(data = daterange(), aes(x = Date, y = undergradCases)) + 
          geom_col(fill = 'blue', alpha = 0.6) + 
          theme_minimal(base_size = 14) +
          xlab("Date") + ylab("Daily Cases") + scale_x_date(date_labels = "%Y-%m-%d")
        cases_plot
        
      } else if (input$groups == 'Graduates') { 
-       cases_plot = ggplot(data = daterange(), aes(x = time, y = gradCases)) + 
+       cases_plot = ggplot(data = daterange(), aes(x = Date, y = gradCases)) + 
          geom_col(fill = 'dark red', alpha = 0.6) + 
          theme_minimal(base_size = 14) +
          xlab("Date") + ylab("Daily Cases") + scale_x_date(date_labels = "%Y-%m-%d")
        cases_plot
        
      } else if (input$groups == 'Faculty/Staff') { 
-       cases_plot = ggplot(data = daterange(), aes(x = time, y = facStaffCases)) + 
+       cases_plot = ggplot(data = daterange(), aes(x = Date, y = facStaffCases)) + 
          geom_col(fill = 'dark green', alpha = 0.6) + 
          theme_minimal(base_size = 14) +
          xlab("Date") + ylab("Daily Cases") + scale_x_date(date_labels = "%Y-%m-%d")
@@ -59,15 +59,15 @@ ui <- navbarPage(
    checkreactive <- reactive({ 
      if (input$positivity) { 
        if (input$groups == 'Undergraduates') { 
-         PR_plot <- ggplot(data = daterange(), aes(x = time, y = UG_Positivity_Rate)) + 
+         PR_plot <- ggplot(data = daterange(), aes(x = Date, y = UG_Positivity_Rate)) + 
            geom_line() + xlab("Date") + ylab("Positivity Rate (%)")
          PR_plot
        } else if (input$groups == 'Graduates') { 
-         PR_plot <- ggplot(data = daterange(), aes(x = time, y = Grad_Positivity_Rate)) + 
+         PR_plot <- ggplot(data = daterange(), aes(x = Date, y = Grad_Positivity_Rate)) + 
            geom_line() + xlab("Date") + ylab("Positivity Rate (%)")
          PR_plot
        } else if (input$groups == 'Faculty/Staff') { 
-         PR_plot <- ggplot(data = daterange(), aes(x = time, y = Faculty_Positivity_Rate)) + 
+         PR_plot <- ggplot(data = daterange(), aes(x = Date, y = Faculty_Positivity_Rate)) + 
            geom_line() + xlab("Date") + ylab("Positivity Rate (%)") 
          PR_plot
        }
