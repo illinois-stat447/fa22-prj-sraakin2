@@ -19,11 +19,6 @@ library(lubridate)
 library(bslib)
 ```
 
-library(shiny)
-library(tidyverse)
-library(ggplot2)
-library(lubridate)
-library(bslib)
 
 ### Dataset 
 
@@ -52,6 +47,7 @@ row.names(Updated_Covid_Dataset) <- NULL
 
 
 ### RShiny Application UI:
+
 This is the main user interface page for the application. The UI includes a select tab of which group the user wants to pick. There is also a Positivity Rate checkbox where if the user clicks on it, an additional graph will be displayed showing the overall positivity rate of Covid-19 cases of the group. Additionally there is date range input allowing the user to pick any date between August 17, 2020 to October 13, 2022.
 ```{r}
 ui <- navbarPage(
@@ -77,6 +73,7 @@ ui <- navbarPage(
 
 ```
 
+### RSiny Application Reactive Functions:
 
 Main code for the reactive functions. Reactive functions makes the application responsive. The app updates depending on the user input and changes. The plots will instantly change whether the user changes the date, or selects a different group. If the user selects 'Undergraduates,' then the plot will instantly only display the undergraduate plots. 
 ```{r}

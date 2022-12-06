@@ -20,7 +20,8 @@ ui <- navbarPage(
                                separator = " - "),
               ),
 
-              mainPanel(plotOutput("selectPlot"), plotOutput("sliderPlot"))))
+              mainPanel(plotOutput("selectPlot"), plotOutput("sliderPlot")))),
+  tabPanel("Table", dataTableOutput("table"))
 )
 
  server <- function(input, output) {
@@ -54,6 +55,19 @@ ui <- navbarPage(
      }
      
    })
+   
+   tablereact <- reactive({ 
+     if (input$groups == 'Undergraduates') { 
+       Updated_Covid_Dataset %>% select(Date, undergradCases, undergradTests, UG_Positivity_Rate)
+     } else if (input$groups == 'Graduates') { 
+       Updated_Covid_Dataset %>% select(Date, gradCases, gradTests, Grad_Positivity_Rate)
+     } else if (input$groups == 'Faculty/Staff') { 
+       Updated_Covid_Dataset %>% select(Date, facStaffCases, facStaffTests, Faculty_Positivity_Rate)
+     } 
+   })
+   
+   
+   output$table = renderDataTable(tablereact())
    
    
    checkreactive <- reactive({ 
