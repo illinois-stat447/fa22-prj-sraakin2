@@ -1,7 +1,59 @@
+---
+title: "Presentation"
+author: "Shadman Raakin"
+date: '2022-12-06'
+output: html_document
+---
 
+### App Overview
+
+In here, we'll mainly be exploring the Covid-19 cases that had occurred in UIUC from August 2020 - October 2022. This dataset comes from the Illinois Shield Data website. This tracks all the cases and tests taken for each group. The groups of people include undergraduate students, graduate students, and faculty / staff members.
+This is an interactive data visualization application using RShiny. Users can select one of the three groups, and see the visualized plot of Covid 19 cases. Users can also select a date range between August 17, 2020 through October 13, 2022, and the plot will display the Covid-19 cases between any specified date the user chooses.
+
+### Libraries used
+```{r}
+library(shiny)
+library(tidyverse)
+library(ggplot2)
+library(lubridate)
+library(bslib)
+```
 
 library(shiny)
+library(tidyverse)
+library(ggplot2)
+library(lubridate)
+library(bslib)
 
+### Dataset 
+
+The dataset used is from the Shield Testing Data website: [Shield Data](https://go.illinois.edu/COVIDTestingData)
+```{r}
+Covid_Dataset <- read.csv("illinois_shield_covid_data_.csv", stringsAsFactors = FALSE)
+```
+
+### Data Wrangling 
+
+Created and added new columns to the dataset. I created a Positivity Rate column to each group (UG, Grad, Fac/Staff) which shows the positivity rate of covid cases, calculated by the number of cases over the number of tests. I renamed the dataset to Updated_Covid_Dataset and removed any NA in the dataframe.
+```{r}
+Groups <- c("Undergraduates", "Graduates", "Faculty/Staff")
+Updated_Covid_Dataset <- Covid_Dataset %>%
+  mutate(Date = (as.Date(Covid_Dataset$time))) %>%
+  mutate(TotalCases = cumsum(totalNewCases)) %>% 
+  mutate(Total_Tests_Taken = cumsum(totalNewTests)) %>%
+  mutate(Positivity_Rate = (totalNewCases / totalNewTests) *100) %>%
+  mutate(UG_Positivity_Rate = (undergradCases / undergradTests) * 100) %>%
+  mutate(Grad_Positivity_Rate = (gradCases / gradTests) * 100) %>%
+  mutate(Faculty_Positivity_Rate = (facStaffCases / facStaffTests) * 100) %>%
+  select(Date, totalNewCases:Faculty_Positivity_Rate) 
+Updated_Covid_Dataset <- na.omit(Updated_Covid_Dataset)
+row.names(Updated_Covid_Dataset) <- NULL
+```
+
+
+### RShiny Application UI:
+This is the main user interface page for the application. The UI includes a select tab of which group the user wants to pick. There is also a Positivity Rate checkbox where if the user clicks on it, an additional graph will be displayed showing the overall positivity rate of Covid-19 cases of the group. Additionally there is date range input allowing the user to pick any date between August 17, 2020 to October 13, 2022.
+```{r}
 ui <- navbarPage(
   theme = bs_theme(bootswatch = "darkly"),
   title = "Main Page",
@@ -23,7 +75,12 @@ ui <- navbarPage(
               mainPanel(plotOutput("selectPlot"), plotOutput("sliderPlot"))))
 )
 
- server <- function(input, output) {
+```
+
+
+Main code for the reactive functions. Reactive functions makes the application responsive. The app updates depending on the user input and changes. The plots will instantly change whether the user changes the date, or selects a different group. If the user selects 'Undergraduates,' then the plot will instantly only display the undergraduate plots. 
+```{r}
+server <- function(input, output) {
    daterange <- reactive({
      Updated_Covid_Dataset %>% filter(Updated_Covid_Dataset$Date >= input$date[1] &
                                         Updated_Covid_Dataset$Date <= input$date[2])
@@ -80,4 +137,8 @@ ui <- navbarPage(
    })
    
  }
- shinyApp(ui = ui, server = server)
+```
+
+
+
+
