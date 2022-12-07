@@ -4,3 +4,6 @@ In this project, we'll mainly be exploring the COVID-19 cases that had occurred 
 
 # Presentation Video Link 
 [link](https://uofi.box.com/s/q32buzh369byb6ozofqsiw5t0z49582u) 
+
+# RShiny Application 
+[link](http://127.0.0.1:7709/)
