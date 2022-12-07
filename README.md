@@ -8,6 +8,3 @@ In this project, we'll mainly be exploring the COVID-19 cases that had occurred 
 
 # Report 
 The report can be found in the repository marked as Presentation.html or Presentation.Rmd
-
-# RShiny Application 
-[link](http://127.0.0.1:7709/)
