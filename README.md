@@ -4,7 +4,7 @@ In this project, we'll mainly be exploring the COVID-19 cases that had occurred 
 - [Data set](https://go.illinois.edu/COVIDTestingData)
 
 # Presentation Video Link 
-[link](https://uofi.box.com/s/q32buzh369byb6ozofqsiw5t0z49582u) 
+[link](https://uofi.box.com/s/8nj22iudj2ap375l9b91ek72tvogp9p1)  
 
 # Report 
 The report can be found in the repository marked as Presentation.html or Presentation.Rmd
